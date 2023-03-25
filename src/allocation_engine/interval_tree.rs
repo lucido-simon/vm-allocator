@@ -548,10 +548,10 @@ impl IntervalTree {
         Ok(())
     }
 
-    fn mark_as_allocated(&mut self, key: &RangeInclusive) -> Result<()> {
+    fn mark_as_allocated(&mut self, key: &RangeInclusive, node_state: NodeState) -> Result<()> {
         match self.root.as_mut() {
             None => (),
-            Some(node) => node.mark_as_allocated(key, node.node_state)?,
+            Some(node) => node.mark_as_allocated(key, node_state)?,
         };
         Ok(())
     }
@@ -596,7 +596,7 @@ impl IntervalTree {
 
         // Allocate a resource from the node, no need to split the candidate node.
         if node_key.start() == result.start() && node_key.len() == constraint.size {
-            self.mark_as_allocated(&node_key)?;
+            self.mark_as_allocated(&node_key, node_state)?;
             return Ok(node_key);
         }
 
